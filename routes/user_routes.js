@@ -1,5 +1,6 @@
 import express from "express"
-import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, getAllComments, createComment } from "../utils/user_utils.js"
+import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, 
+    getAllComments, createComment, getCommentsByPost, likeComment } from "../utils/user_utils.js"
 
 const router = express.Router()
 
@@ -106,6 +107,27 @@ router.post("/commenti", async (request, response) => {
         dati.idPost,
         dati.idCommentoMain,
         dati.contenuto
+    )
+
+    response.send(risultato)
+})
+
+router.get("/commenti/post/:idPost", async (request, response) => {
+
+    const idPost = request.params.idPost
+
+    const comments = await getCommentsByPost(idPost)
+
+    response.send(comments)
+})
+
+router.post("/commenti/like", async (request, response) => {
+
+    const dati = request.body
+
+    const risultato = await likeComment(
+        dati.idUtente,
+        dati.idCommento
     )
 
     response.send(risultato)

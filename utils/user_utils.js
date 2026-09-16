@@ -66,3 +66,23 @@ export async function createComment(idUtente, idPost, idCommentoMain, contenuto)
 
     return result
 }
+
+export async function getCommentsByPost(idPost) {
+
+    const [comments] = await connection.query(
+        "SELECT * FROM comments WHERE idPost = ?",
+        [idPost]
+    )
+
+    return comments
+}
+
+export async function likeComment(idUtente, idCommento) {
+    const [result] = await connection.query(
+        `INSERT INTO comment_likes
+        (idUtente, idCommento)
+        VALUES (?, ?)`,
+        [idUtente, idCommento]
+    )
+    return result
+}
