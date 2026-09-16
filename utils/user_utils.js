@@ -49,3 +49,20 @@ export async function deleteUser(id) {
 
     return result
 }
+
+export async function getAllComments(){
+    const [comments] = await connection.query("SELECT * FROM comments")
+    return comments
+}
+
+export async function createComment(idUtente, idPost, idCommentoMain, contenuto) {
+
+    const [result] = await connection.query(
+        `INSERT INTO comments
+        (idUtente, idPost, idCommentoMain, contenuto)
+        VALUES (?, ?, ?, ?)`,
+        [idUtente, idPost, idCommentoMain, contenuto]
+    )
+
+    return result
+}

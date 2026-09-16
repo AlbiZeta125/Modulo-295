@@ -1,5 +1,5 @@
 import express from "express"
-import { getAllUtenti, getUserById, createUser, updateUser, deleteUser } from "../utils/user_utils.js"
+import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, getAllComments, createComment } from "../utils/user_utils.js"
 
 const router = express.Router()
 
@@ -86,6 +86,27 @@ router.delete("/utenti/:id", async (request, response) => {
     const id = request.params.id
 
     const risultato = await deleteUser(id)
+
+    response.send(risultato)
+})
+
+router.get("/commenti", async (request, response) => {
+
+    const comments = await getAllComments()
+
+    response.send(comments)
+})
+
+router.post("/commenti", async (request, response) => {
+
+    const dati = request.body
+
+    const risultato = await createComment(
+        dati.idUtente,
+        dati.idPost,
+        dati.idCommentoMain,
+        dati.contenuto
+    )
 
     response.send(risultato)
 })
