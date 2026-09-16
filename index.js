@@ -4,6 +4,12 @@ import dotenv from "dotenv";
 import { router as userRoutes } from "./routes/user_routes.js"
 import { router as securityRoutes } from "./routes/security_routes.js";
 
+import { router as postRoutes } from "./routes/post_routes.js"
+
+import { router as tagRoutes } from "./routes/tag_routes.js"
+
+import { router as commentRoutes } from "./routes/comment_routes.js"
+
 const app = express() 
 dotenv.config()
 
@@ -13,7 +19,9 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
 app.use("", userRoutes)
-
+app.use("", postRoutes)
+app.use("", tagRoutes)
+app.use("", commentRoutes)
 /* Endpoint */
 /* 
     app -> Applicazione express
