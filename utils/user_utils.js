@@ -112,38 +112,6 @@ export async function canViewProfile(idProfilo, idVisitatore) {
     return follow.length > 0
 }
 
-export async function canViewProfile(idProfilo, idVisitatore) {
-
-    const [users] = await connection.query(
-        "SELECT visibility FROM users WHERE idUtente = ?",
-        [idProfilo]
-    )
-
-    if (users.length === 0) {
-        return false
-    }
-
-    if (idProfilo == idVisitatore) {
-        return true
-    }
-
-    if (users[0].visibility === "public") {
-        return true
-    }
-
-    if (users[0].visibility === "private") {
-        return false
-    }
-
-    const [follow] = await connection.query(
-        `SELECT * FROM user_follows
-         WHERE idFollower = ? AND idSeguito = ?`,
-        [idVisitatore, idProfilo]
-    )
-
-    return follow.length > 0
-}
-
 export async function getCommentsByPost(idPost) {
 
     const [comments] = await connection.query(
