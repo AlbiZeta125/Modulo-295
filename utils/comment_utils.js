@@ -42,3 +42,22 @@ export async function updateComment(idCommento, contenuto) {
 
     return result
 }
+
+export async function deleteComment(idCommento, idUtente) {
+
+    const [result] = await connection.query(
+        "DELETE FROM comments WHERE idCommento = ? AND idUtente = ?",
+        [idCommento, idUtente]
+    )
+
+    return result
+}
+export async function getRepliesByComment(idCommento) {
+
+    const [comments] = await connection.query(
+        "SELECT * FROM comments WHERE idCommentoMain = ?",
+        [idCommento]
+    )
+
+    return comments
+}

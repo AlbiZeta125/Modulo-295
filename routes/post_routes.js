@@ -1,5 +1,6 @@
 import express from "express"
 import { getAllPosts, getPostById, createPost, updatePost, deletePost } from "../utils/post_utils.js"
+import { addTagToPost } from "../utils/tag_utils.js"
 
 const router = express.Router()
 
@@ -23,24 +24,19 @@ router.post("/posts", async (request, response) => {
 
     const dati = request.body
 
+    if (!dati.idTag) {
+        return response.status(400).send("Devi inserire almeno un tag")
+    }
+
     const risultato = await createPost(
-        dati.idUtente,
+        request.session.user_id,
         dati.contenuto,
         dati.immagine
     )
 
-    response.send(risultato)
-})
-
-router.put("/posts/:id", async (request, response) => {
-
-    const id = request.params.id
-    const dati = request.body
-
-    const risultato = await updatePost(
-        id,
-        dati.contenuto,
-        dati.immagine
+    await addTagToPost(
+        risultato.insertId,
+        dati.idTag
     )
 
     response.send(risultato)
@@ -50,7 +46,10 @@ router.delete("/posts/:id", async (request, response) => {
 
     const id = request.params.id
 
-    const risultato = await deletePost(id)
+    const risultato = await deletePost(
+        id,
+        request.session.user_id
+    )
 
     response.send(risultato)
 })

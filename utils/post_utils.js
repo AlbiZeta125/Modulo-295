@@ -40,11 +40,11 @@ export async function updatePost(id, contenuto, immagine) {
     return result
 }
 
-export async function deletePost(id) {
+export async function deletePost(idPost, idUtente) {
 
     const [result] = await connection.query(
-        "DELETE FROM posts WHERE idPost = ?",
-        [id]
+        "DELETE FROM posts WHERE idPost = ? AND idUtente = ?",
+        [idPost, idUtente]
     )
 
     return result

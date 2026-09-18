@@ -1,5 +1,5 @@
 import express from "express"
-import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, getAllComments, createComment } from "../utils/user_utils.js"
+import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, updateVisibility, canViewProfile } from "../utils/user_utils.js"
 
 const router = express.Router()
 
@@ -83,32 +83,45 @@ router.put("/utenti/:id", async (request, response) => {
 
 router.delete("/utenti/:id", async (request, response) => {
 
-    const id = request.params.id
+    if (!request.session.user_id) {
+        return response.status(401).send("Devi effettuare il login")
+    }
+
+    const id = Number(request.params.id)
+
+    if (id !== request.session.user_id) {
+        return response.status(403).send("Non puoi eliminare un altro utente")
+    }
 
     const risultato = await deleteUser(id)
 
     response.send(risultato)
 })
 
-router.get("/commenti", async (request, response) => {
+router.put("/utenti/:id/visibility", async (request, response) => {
 
-    const comments = await getAllComments()
-
-    response.send(comments)
-})
-
-router.post("/commenti", async (request, response) => {
-
+    const id = request.params.id
     const dati = request.body
 
-    const risultato = await createComment(
-        dati.idUtente,
-        dati.idPost,
-        dati.idCommentoMain,
-        dati.contenuto
+    const risultato = await updateVisibility(
+        id,
+        dati.visibility
     )
 
     response.send(risultato)
+})
+
+router.get("/utenti/:id/visibile/:idVisitatore", async (request, response) => {
+
+    const id = request.params.id
+    const idVisitatore = request.params.idVisitatore
+
+    const visibile = await canViewProfile(
+        id,
+        idVisitatore
+    )
+
+    response.send({ visibile: visibile })
 })
 
 export {router}
