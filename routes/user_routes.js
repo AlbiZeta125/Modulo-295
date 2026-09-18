@@ -1,5 +1,6 @@
 import express from "express"
-import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, updateVisibility, canViewProfile } from "../utils/user_utils.js"
+import { getAllUtenti, getUserById, createUser, updateUser, deleteUser, 
+    updateVisibility, canViewProfile, getCommentsByPost, likeComment } from "../utils/user_utils.js"
 
 const router = express.Router()
 
@@ -109,19 +110,6 @@ router.put("/utenti/:id/visibility", async (request, response) => {
     )
 
     response.send(risultato)
-})
-
-router.get("/utenti/:id/visibile/:idVisitatore", async (request, response) => {
-
-    const id = request.params.id
-    const idVisitatore = request.params.idVisitatore
-
-    const visibile = await canViewProfile(
-        id,
-        idVisitatore
-    )
-
-    response.send({ visibile: visibile })
 })
 
 export {router}
